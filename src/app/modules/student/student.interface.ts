@@ -24,15 +24,15 @@ export type Student = {
   id: string;
   name: UserName;
   email: string;
-  gender: 'male' | 'female';
+  gender: "male" | "female";
   dateOfBirth: string;
   contactNo: string;
   emergencyContactNo: string;
-  bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
+  bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
   presentAddress: string;
   permanentAddress: string;
   guardian: Guardian;
   localGuardian?: LocalGuardian;
   profileImg?: string;
-  isActive: 'active' | 'inactive';
+  isActive: "active" | "inactive";
 };

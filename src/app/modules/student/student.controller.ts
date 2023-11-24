@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
 import { StudentServices } from './student.service'
 import StudentValidationSchema from './student.validation'
@@ -15,10 +16,10 @@ const createStudent = async (req: Request, res: Response) => {
       message: 'Student created successfully',
       data: result,
     })
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Something went wrong',
+      message: error.message || 'Something went wrong',
       data: error,
     })
   }

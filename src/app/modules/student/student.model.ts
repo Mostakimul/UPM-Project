@@ -1,7 +1,14 @@
 import { Schema, model } from 'mongoose'
-import { Guardian, LocalGuardian, Student, UserName } from './student.interface'
+import {
+  TGuardian,
+  TLocalGuardian,
+  TStudent,
+  TStudentMethods,
+  TStudentModel,
+  TUserName,
+} from './student.interface'
 
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     trim: true,
@@ -15,7 +22,7 @@ const userNameSchema = new Schema<UserName>({
   },
 })
 
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
     trim: true,
@@ -48,7 +55,11 @@ const guardianSchema = new Schema<Guardian>({
   },
 })
 
-const localGuardianSchema = new Schema<LocalGuardian>({
+const localGuardianSchema = new Schema<
+  TLocalGuardian,
+  TStudentModel,
+  TStudentMethods
+>({
   name: {
     type: String,
     trim: true,
@@ -71,7 +82,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
   },
 })
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent>({
   id: {
     type: String,
     required: true,
@@ -137,4 +148,9 @@ const studentSchema = new Schema<Student>({
   },
 })
 
-export const StudentModel = model<Student>('Student', studentSchema)
+studentSchema.methods.isUserExist = async function (id: string) {
+  const existingUser = await Student.findOne({ id })
+  return existingUser
+}
+
+export const Student = model<TStudent, TStudentModel>('Student', studentSchema)

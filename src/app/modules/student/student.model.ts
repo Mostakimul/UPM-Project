@@ -1,4 +1,6 @@
+import bcrypt from 'bcrypt'
 import { Schema, model } from 'mongoose'
+import config from '../../config'
 import {
   StudentModel,
   TGuardian,
@@ -87,6 +89,10 @@ const studentSchema = new Schema<TStudent>({
     type: userNameSchema,
     required: [true, 'Name is required'],
   },
+  password: {
+    type: String,
+    required: [true, 'Password is required'],
+  },
   gender: {
     type: String,
     enum: {
@@ -153,5 +159,20 @@ studentSchema.statics.isUserExist = async function (id: string) {
 //   const existingUser = await Student.findOne({ id })
 //   return existingUser
 // }
+
+// creating a post hook // will work on create() and save()
+studentSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_rounds),
+  )
+  next()
+})
+
+// creating a pre hook
+studentSchema.post('save', function (doc, next) {
+  doc.password = ''
+  next()
+})
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema)

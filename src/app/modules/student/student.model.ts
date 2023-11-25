@@ -79,79 +79,89 @@ const localGuardianSchema = new Schema<TLocalGuardian, StudentModel>({
   },
 })
 
-const studentSchema = new Schema<TStudent>({
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  name: {
-    type: userNameSchema,
-    required: [true, 'Name is required'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-  },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female', 'other'],
-      message: "The gender can be either 'male', 'female' or 'other'",
+const studentSchema = new Schema<TStudent>(
+  {
+    id: {
+      type: String,
+      required: true,
+      unique: true,
     },
-    required: [true, 'Gender is required'],
+    name: {
+      type: userNameSchema,
+      required: [true, 'Name is required'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+    },
+    gender: {
+      type: String,
+      enum: {
+        values: ['male', 'female', 'other'],
+        message: "The gender can be either 'male', 'female' or 'other'",
+      },
+      required: [true, 'Gender is required'],
+    },
+    dateOfBirth: {
+      type: String,
+      required: [true, 'Date of birth is required'],
+    },
+    email: {
+      type: String,
+      trim: true,
+      required: [true, 'Email is required'],
+      unique: true,
+    },
+    contactNo: {
+      type: String,
+      trim: true,
+      required: [true, 'Contact number is required'],
+    },
+    emergencyContactNo: {
+      type: String,
+      trim: true,
+      required: [true, 'Emergency contact number is required'],
+    },
+    bloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+      required: false,
+    },
+    presentAddress: {
+      type: String,
+      trim: true,
+      required: [true, 'Present address is required'],
+    },
+    permanentAddress: {
+      type: String,
+      trim: true,
+      required: [true, 'Permanent address is required'],
+    },
+    guardian: {
+      type: guardianSchema,
+      required: [true, 'Guardian is required'],
+    },
+    localGuardian: {
+      type: localGuardianSchema,
+      required: [true, 'Local guardian is required'],
+    },
+    profileImg: { type: String, required: false },
+    isActive: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  dateOfBirth: { type: String, required: [true, 'Date of birth is required'] },
-  email: {
-    type: String,
-    trim: true,
-    required: [true, 'Email is required'],
-    unique: true,
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  contactNo: {
-    type: String,
-    trim: true,
-    required: [true, 'Contact number is required'],
-  },
-  emergencyContactNo: {
-    type: String,
-    trim: true,
-    required: [true, 'Emergency contact number is required'],
-  },
-  bloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-    required: false,
-  },
-  presentAddress: {
-    type: String,
-    trim: true,
-    required: [true, 'Present address is required'],
-  },
-  permanentAddress: {
-    type: String,
-    trim: true,
-    required: [true, 'Permanent address is required'],
-  },
-  guardian: {
-    type: guardianSchema,
-    required: [true, 'Guardian is required'],
-  },
-  localGuardian: {
-    type: localGuardianSchema,
-    required: [true, 'Local guardian is required'],
-  },
-  profileImg: { type: String, required: false },
-  isActive: {
-    type: String,
-    enum: ['active', 'inactive'],
-    default: 'active',
-  },
-  isDeleted: {
-    type: Boolean,
-    default: false,
-  },
-})
+)
 // creating a custom static method
 studentSchema.statics.isUserExist = async function (id: string) {
   const existingUser = await Student.findOne({ id })
@@ -188,6 +198,11 @@ studentSchema.pre('find', function (next) {
 studentSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
   next()
+})
+
+// virtuals
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName} + ${this.name.middleName} + ${this.name.lastName}`
 })
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema)

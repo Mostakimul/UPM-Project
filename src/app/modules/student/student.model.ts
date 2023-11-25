@@ -147,6 +147,10 @@ const studentSchema = new Schema<TStudent>({
     enum: ['active', 'inactive'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 })
 // creating a custom static method
 studentSchema.statics.isUserExist = async function (id: string) {
@@ -172,6 +176,17 @@ studentSchema.pre('save', async function (next) {
 // creating a pre hook
 studentSchema.post('save', function (doc, next) {
   doc.password = ''
+  next()
+})
+
+// find query middleware
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+
+  next()
+})
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
   next()
 })
 

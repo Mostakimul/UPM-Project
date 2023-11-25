@@ -39,13 +39,16 @@ export type TStudent = {
   isActive: 'active' | 'inactive'
 }
 
-export type TStudentMethods = {
+// for creating static
+export interface StudentModel extends Model<TStudent> {
   // eslint-disable-next-line no-unused-vars
   isUserExist(id: string): Promise<TStudent | null>
 }
 
-export type TStudentModel = Model<
-  TStudent,
-  Record<string, never>,
-  TStudentMethods
->
+// for creating instance
+// export type TStudentMethods = {
+//   // eslint-disable-next-line no-unused-vars
+//   isUserExist(id: string): Promise<TStudent | null>
+// }
+
+// export type TStudentModel = Model<TStudent, Record<string, never>>

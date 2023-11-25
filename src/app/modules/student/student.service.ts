@@ -6,11 +6,16 @@ const createStudentService = async (studentData: TStudent) => {
   // const result = await StudentModel.create(student);
 
   // instance method
-  const student = new Student(studentData)
-  if (await student.isUserExist(studentData.id)) {
+  // const student = new Student(studentData)
+  // if (await student.isUserExist(studentData.id)) {
+  //   throw new Error('User already exist!')
+  // }
+  // const result = await student.save()
+
+  if (await Student.isUserExist(studentData.id)) {
     throw new Error('User already exist!')
   }
-  const result = await student.save()
+  const result = await Student.create(studentData)
 
   return result
 }

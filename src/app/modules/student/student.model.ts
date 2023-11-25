@@ -1,10 +1,9 @@
 import { Schema, model } from 'mongoose'
 import {
+  StudentModel,
   TGuardian,
   TLocalGuardian,
   TStudent,
-  TStudentMethods,
-  TStudentModel,
   TUserName,
 } from './student.interface'
 
@@ -55,11 +54,7 @@ const guardianSchema = new Schema<TGuardian>({
   },
 })
 
-const localGuardianSchema = new Schema<
-  TLocalGuardian,
-  TStudentModel,
-  TStudentMethods
->({
+const localGuardianSchema = new Schema<TLocalGuardian, StudentModel>({
   name: {
     type: String,
     trim: true,
@@ -147,10 +142,16 @@ const studentSchema = new Schema<TStudent>({
     default: 'active',
   },
 })
-
-studentSchema.methods.isUserExist = async function (id: string) {
+// creating a custom static method
+studentSchema.statics.isUserExist = async function (id: string) {
   const existingUser = await Student.findOne({ id })
   return existingUser
 }
 
-export const Student = model<TStudent, TStudentModel>('Student', studentSchema)
+// creating a custom instance method
+// studentSchema.methods.isUserExist = async function (id: string) {
+//   const existingUser = await Student.findOne({ id })
+//   return existingUser
+// }
+
+export const Student = model<TStudent, StudentModel>('Student', studentSchema)

@@ -1,6 +1,4 @@
-import bcrypt from 'bcrypt'
 import { Schema, model } from 'mongoose'
-import config from '../../config'
 import {
   StudentModel,
   TGuardian,
@@ -86,13 +84,15 @@ const studentSchema = new Schema<TStudent>(
       required: true,
       unique: true,
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User Id is required'],
+      unique: true,
+      ref: 'User',
+    },
     name: {
       type: userNameSchema,
       required: [true, 'Name is required'],
-    },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
     },
     gender: {
       type: String,
@@ -146,11 +146,7 @@ const studentSchema = new Schema<TStudent>(
       required: [true, 'Local guardian is required'],
     },
     profileImg: { type: String, required: false },
-    isActive: {
-      type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
-    },
+
     isDeleted: {
       type: Boolean,
       default: false,
@@ -167,27 +163,6 @@ studentSchema.statics.isUserExist = async function (id: string) {
   const existingUser = await Student.findOne({ id })
   return existingUser
 }
-
-// creating a custom instance method
-// studentSchema.methods.isUserExist = async function (id: string) {
-//   const existingUser = await Student.findOne({ id })
-//   return existingUser
-// }
-
-// creating a post hook // will work on create() and save()
-studentSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_rounds),
-  )
-  next()
-})
-
-// creating a pre hook
-studentSchema.post('save', function (doc, next) {
-  doc.password = ''
-  next()
-})
 
 // find query middleware
 studentSchema.pre('find', function (next) {

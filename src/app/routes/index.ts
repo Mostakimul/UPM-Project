@@ -15,7 +15,7 @@ const moduleRoutes = [
     route: StudentRoutes,
   },
   {
-    path: '/academic-semster',
+    path: '/academic-semsters',
     route: AcademicSemesterRoutes,
   },
 ]

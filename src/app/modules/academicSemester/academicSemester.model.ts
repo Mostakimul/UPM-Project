@@ -10,7 +10,7 @@ const academicSemesterSchema = new Schema<TAcademicSemester>(
       required: true,
     },
     code: { type: String, enum: SemesterCode, required: true },
-    year: { type: Date, required: true },
+    year: { type: String, required: true },
     startMonth: {
       type: String,
       enum: Months,

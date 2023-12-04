@@ -24,8 +24,20 @@ const getSingleAcademicSemesterService = async (id: string) => {
   return result
 }
 
+const updateAcademicSemesterService = async (
+  id: string,
+  payload: Partial<TAcademicSemester>,
+) => {
+  const result = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  })
+
+  return result
+}
+
 export const AcademicSemesterServices = {
   createAcademicSemesterService,
   getAllAcademicSemestersService,
   getSingleAcademicSemesterService,
+  updateAcademicSemesterService,
 }

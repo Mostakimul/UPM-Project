@@ -18,7 +18,14 @@ const getAllAcademicSemestersService = async () => {
   return result
 }
 
+const getSingleAcademicSemesterService = async (id: string) => {
+  const result = await AcademicSemester.findOne({ _id: id })
+
+  return result
+}
+
 export const AcademicSemesterServices = {
   createAcademicSemesterService,
   getAllAcademicSemestersService,
+  getSingleAcademicSemesterService,
 }

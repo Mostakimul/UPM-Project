@@ -5,7 +5,7 @@ import { Schema, model } from 'mongoose'
 import config from '../../config'
 import { TUser } from './user.interface'
 
-const userSchema = new Schema(
+const userSchema = new Schema<TUser>(
   {
     id: {
       type: String,
@@ -15,7 +15,7 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
-    needsPasswordChange: {
+    needPasswordChange: {
       type: Boolean,
       default: true,
     },

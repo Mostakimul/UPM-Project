@@ -1,8 +1,8 @@
 export type TUser = {
   id: string
   password: string
-  needsPasswordChamge: boolean
+  needPasswordChange: boolean
   role: 'admin' | 'student' | 'faculty'
-  status: 'in-peogress' | 'blocked'
+  status: 'in-progress' | 'blocked'
   isDeleted: boolean
 }

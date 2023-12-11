@@ -79,6 +79,11 @@ const localGuardianSchema = new Schema<TLocalGuardian, StudentModel>({
 
 const studentSchema = new Schema<TStudent>(
   {
+    id: {
+      type: String,
+      required: [true, 'ID is required'],
+      unique: true,
+    },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'User Id is required'],
@@ -149,6 +154,10 @@ const studentSchema = new Schema<TStudent>(
       type: Schema.Types.ObjectId,
       ref: 'AcademicDepartment',
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: {
@@ -175,7 +184,7 @@ studentSchema.pre('aggregate', function (next) {
 
 // virtuals
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} + ${this.name.middleName} + ${this.name.lastName}`
+  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`
 })
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema)

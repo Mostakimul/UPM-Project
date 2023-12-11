@@ -1,10 +1,12 @@
+import httpStatus from 'http-status'
+import AppError from '../../errors/AppError'
 import { academicSemesterCodeMapper } from './academicSemester.constant'
 import { TAcademicSemester } from './academicSemester.interface'
 import { AcademicSemester } from './academicSemester.model'
 
 const createAcademicSemesterService = async (payload: TAcademicSemester) => {
   if (academicSemesterCodeMapper[payload.name] !== payload.code) {
-    throw new Error('Invalid semester code!')
+    throw new AppError(httpStatus.NOT_ACCEPTABLE, 'Invalid semester code!')
   }
 
   const result = await AcademicSemester.create(payload)
@@ -33,7 +35,7 @@ const updateAcademicSemesterService = async (
     payload.code &&
     academicSemesterCodeMapper[payload.name] !== payload.code
   ) {
-    throw new Error('Invalid Semester Code')
+    throw new AppError(httpStatus.NOT_ACCEPTABLE, 'Invalid Semester Code')
   }
 
   const result = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {

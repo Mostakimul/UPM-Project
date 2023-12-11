@@ -2,6 +2,7 @@ import httpStatus from 'http-status'
 import mongoose from 'mongoose'
 import AppError from '../../errors/AppError'
 import { User } from '../user/user.model'
+import { TStudent } from './student.interface'
 import { Student } from './student.model'
 
 const getAllStudentsService = async () => {
@@ -30,12 +31,38 @@ const getSingleStudentService = async (id: string) => {
   return result
 }
 
-const deleteSingleStudentService = async (id: string) => {
-  const isStudentExist = Student.isUserExist(id)
-  if (!isStudentExist) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Student not found!')
+const updateStudentService = async (id: string, payload: Partial<TStudent>) => {
+  const { name, guardian, localGuardian, ...rest } = payload
+
+  const updatedData: Record<string, unknown> = {
+    ...rest,
   }
 
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      updatedData[`name.${key}`] = value
+    }
+  }
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      updatedData[`guardian.${key}`] = value
+    }
+  }
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      updatedData[`localGuardian.${key}`] = value
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id }, updatedData, {
+    new: true,
+    runValidators: true,
+  })
+
+  return result
+}
+
+const deleteSingleStudentService = async (id: string) => {
   const session = await mongoose.startSession()
   try {
     await session.startTransaction()
@@ -67,11 +94,13 @@ const deleteSingleStudentService = async (id: string) => {
   } catch (error) {
     await session.abortTransaction()
     await session.endSession()
+    throw new Error('Failed to delete student!')
   }
 }
 
 export const StudentServices = {
   getAllStudentsService,
   getSingleStudentService,
+  updateStudentService,
   deleteSingleStudentService,
 }

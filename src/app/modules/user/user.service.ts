@@ -13,7 +13,7 @@ const createStudentService = async (password: string, payload: TStudent) => {
   // set student role
   const userData: Partial<TUser> = {}
 
-  userData.password = password || (config.default_passwrod as string)
+  userData.password = password || (config.default_password as string)
   userData.role = 'student'
 
   // Academix semester info
@@ -55,6 +55,7 @@ const createStudentService = async (password: string, payload: TStudent) => {
   } catch (error) {
     await session.abortTransaction()
     await session.endSession()
+    throw new Error('Failed to create student!')
   }
 }
 

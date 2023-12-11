@@ -9,8 +9,6 @@ import { UserServices } from './user.service'
 const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body
 
-  // const validationResult = UserValidation.parse(studentData)
-
   const result = await UserServices.createStudentService(password, studentData)
 
   sendResponse(res, {

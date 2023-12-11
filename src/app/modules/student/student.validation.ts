@@ -24,24 +24,24 @@ const LocalGuardianValidationSchema = z.object({
 
 const StudentValidationSchema = z.object({
   body: z.object({
-    id: z.string().min(1).max(255),
-    name: UserNameValidationSchema,
-    gender: z.enum(['male', 'female', 'other']),
-    dateOfBirth: z.string(),
-    email: z.string().email(),
-    contactNo: z.string().min(1).max(20).trim(),
-    emergencyContactNo: z.string().min(1).max(20).trim(),
-    bloodGroup: z
-      .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-      .optional(),
-    presentAddress: z.string().min(1).max(255).trim(),
-    permanentAddress: z.string().min(1).max(255).trim(),
-    guardian: GuardianValidationSchema,
-    localGuardian: LocalGuardianValidationSchema,
-    profileImg: z.string().optional(),
-    admissionSemester: z.string(),
-    isActive: z.enum(['active', 'inactive']).default('active'),
-    isDeleted: z.boolean().default(false),
+    student: z.object({
+      name: UserNameValidationSchema,
+      gender: z.enum(['male', 'female', 'other']),
+      dateOfBirth: z.string(),
+      email: z.string().email(),
+      contactNo: z.string().min(1).max(20).trim(),
+      emergencyContactNo: z.string().min(1).max(20).trim(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string().min(1).max(255).trim(),
+      permanentAddress: z.string().min(1).max(255).trim(),
+      guardian: GuardianValidationSchema,
+      localGuardian: LocalGuardianValidationSchema,
+      profileImg: z.string().optional(),
+      admissionSemester: z.string(),
+      academicDepartment: z.string(),
+    }),
   }),
 })
 

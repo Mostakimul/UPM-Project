@@ -4,6 +4,7 @@
 import { ErrorRequestHandler } from 'express'
 import { ZodError } from 'zod'
 import config from '../config'
+import handleValidationError from '../errors/handleValidationError'
 import handleZodError from '../errors/handleZodError'
 import { TErrorSource } from '../interface/errors'
 
@@ -19,10 +20,14 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
 
   if (error instanceof ZodError) {
     const simplifiedError = handleZodError(error)
-
-    statusCode = simplifiedError.statusCode
-    message = simplifiedError.message
-    errorSources = simplifiedError.errorSources
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSources = simplifiedError?.errorSources
+  } else if (error?.name === 'ValidationError') {
+    const simplifiedError = handleValidationError(error)
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSources = simplifiedError?.errorSources
   }
 
   return res.status(statusCode).json({

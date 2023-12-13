@@ -5,7 +5,7 @@ import { AdminServices } from './admin.service'
 
 const getSingleAdmin = catchAsync(async (req, res) => {
   const { id } = req.params
-  const result = await AdminServices.getSingleAdminFromDB(id)
+  const result = await AdminServices.getSingleAdminService(id)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -16,7 +16,7 @@ const getSingleAdmin = catchAsync(async (req, res) => {
 })
 
 const getAllAdmins = catchAsync(async (req, res) => {
-  const result = await AdminServices.getAllAdminsFromDB(req.query)
+  const result = await AdminServices.getAllAdminsService(req.query)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -29,7 +29,7 @@ const getAllAdmins = catchAsync(async (req, res) => {
 const updateAdmin = catchAsync(async (req, res) => {
   const { id } = req.params
   const { admin } = req.body
-  const result = await AdminServices.updateAdminIntoDB(id, admin)
+  const result = await AdminServices.updateAdminService(id, admin)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -41,7 +41,7 @@ const updateAdmin = catchAsync(async (req, res) => {
 
 const deleteAdmin = catchAsync(async (req, res) => {
   const { id } = req.params
-  const result = await AdminServices.deleteAdminFromDB(id)
+  const result = await AdminServices.deleteAdminService(id)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

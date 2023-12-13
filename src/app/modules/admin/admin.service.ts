@@ -8,7 +8,7 @@ import { AdminSearchableFields } from './admin.constant'
 import { TAdmin } from './admin.interface'
 import { Admin } from './admin.model'
 
-const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
+const getAllAdminsService = async (query: Record<string, unknown>) => {
   const adminQuery = new QueryBuilder(Admin.find(), query)
     .search(AdminSearchableFields)
     .filter()
@@ -20,12 +20,12 @@ const getAllAdminsFromDB = async (query: Record<string, unknown>) => {
   return result
 }
 
-const getSingleAdminFromDB = async (id: string) => {
+const getSingleAdminService = async (id: string) => {
   const result = await Admin.findById(id)
   return result
 }
 
-const updateAdminIntoDB = async (id: string, payload: Partial<TAdmin>) => {
+const updateAdminService = async (id: string, payload: Partial<TAdmin>) => {
   const { name, ...remainingAdminData } = payload
 
   const modifiedUpdatedData: Record<string, unknown> = {
@@ -45,7 +45,7 @@ const updateAdminIntoDB = async (id: string, payload: Partial<TAdmin>) => {
   return result
 }
 
-const deleteAdminFromDB = async (id: string) => {
+const deleteAdminService = async (id: string) => {
   const session = await mongoose.startSession()
 
   try {
@@ -86,8 +86,8 @@ const deleteAdminFromDB = async (id: string) => {
 }
 
 export const AdminServices = {
-  getAllAdminsFromDB,
-  getSingleAdminFromDB,
-  updateAdminIntoDB,
-  deleteAdminFromDB,
+  getAllAdminsService,
+  getSingleAdminService,
+  updateAdminService,
+  deleteAdminService,
 }

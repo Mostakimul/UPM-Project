@@ -8,7 +8,7 @@ import { FacultySearchableFields } from './faculty.constant'
 import { TFaculty } from './faculty.interface'
 import { Faculty } from './faculty.model'
 
-const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
+const getAllFacultiesService = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
     Faculty.find().populate('academicDepartment'),
     query,
@@ -23,13 +23,13 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   return result
 }
 
-const getSingleFacultyFromDB = async (id: string) => {
+const getSingleFacultyService = async (id: string) => {
   const result = await Faculty.findById(id).populate('academicDepartment')
 
   return result
 }
 
-const updateFacultyIntoDB = async (id: string, payload: Partial<TFaculty>) => {
+const updateFacultyService = async (id: string, payload: Partial<TFaculty>) => {
   const { name, ...remainingFacultyData } = payload
 
   const modifiedUpdatedData: Record<string, unknown> = {
@@ -49,7 +49,7 @@ const updateFacultyIntoDB = async (id: string, payload: Partial<TFaculty>) => {
   return result
 }
 
-const deleteFacultyFromDB = async (id: string) => {
+const deleteFacultyService = async (id: string) => {
   const session = await mongoose.startSession()
 
   try {
@@ -90,8 +90,8 @@ const deleteFacultyFromDB = async (id: string) => {
 }
 
 export const FacultyServices = {
-  getAllFacultiesFromDB,
-  getSingleFacultyFromDB,
-  updateFacultyIntoDB,
-  deleteFacultyFromDB,
+  getAllFacultiesService,
+  getSingleFacultyService,
+  updateFacultyService,
+  deleteFacultyService,
 }

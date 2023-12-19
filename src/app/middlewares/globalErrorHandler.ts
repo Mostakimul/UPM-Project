@@ -6,6 +6,7 @@ import { ZodError } from 'zod'
 import config from '../config'
 import AppError from '../errors/AppError'
 import handleCastError from '../errors/handleCastError'
+import handleDuplicateError from '../errors/handleDuplicateError'
 import handleValidationError from '../errors/handleValidationError'
 import handleZodError from '../errors/handleZodError'
 import { TErrorSource } from '../interface/errors'
@@ -32,6 +33,11 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     errorSources = simplifiedError?.errorSources
   } else if (error?.name === 'CastError') {
     const simplifiedError = handleCastError(error)
+    statusCode = simplifiedError?.statusCode
+    message = simplifiedError?.message
+    errorSources = simplifiedError?.errorSources
+  } else if (error?.code === 11000) {
+    const simplifiedError = handleDuplicateError(error)
     statusCode = simplifiedError?.statusCode
     message = simplifiedError?.message
     errorSources = simplifiedError?.errorSources

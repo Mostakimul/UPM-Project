@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TErrorSource, TGenericErrorResponse } from '../interface/errors'
 
-const handleCastError = (err: any): TGenericErrorResponse => {
+const handleDuplicateError = (err: any): TGenericErrorResponse => {
   const statusCode = 400
 
   const match = err.message.match(/"([^"]*)"/)
@@ -17,9 +17,9 @@ const handleCastError = (err: any): TGenericErrorResponse => {
 
   return {
     statusCode,
-    message: 'Invalid Id',
+    message: 'Duplicate Error',
     errorSources,
   }
 }
 
-export default handleCastError
+export default handleDuplicateError

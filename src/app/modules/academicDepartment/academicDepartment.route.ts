@@ -1,5 +1,7 @@
 import express from 'express'
+import auth from '../../middlewares/auth'
 import validateRequest from '../../middlewares/validateRequest'
+import { USER_ROLE } from '../user/user.constant'
 import { AcademicDepartmentController } from './academicDepartment.controller'
 import { AcademicDepartmentValidation } from './academicDepartment.validation'
 
@@ -7,6 +9,7 @@ const router = express.Router()
 
 router.post(
   '/',
+  auth(USER_ROLE.admin),
   validateRequest(
     AcademicDepartmentValidation.academicDepartmentValidationSchema,
   ),
@@ -15,6 +18,7 @@ router.post(
 
 router.patch(
   '/:academicDepartmentId',
+  auth(USER_ROLE.admin),
   validateRequest(
     AcademicDepartmentValidation.updateacAdemicDepartmentValidationSchema,
   ),

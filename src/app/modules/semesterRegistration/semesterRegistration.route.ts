@@ -1,5 +1,7 @@
 import express from 'express'
+import auth from '../../middlewares/auth'
 import validateRequest from '../../middlewares/validateRequest'
+import { USER_ROLE } from '../user/user.constant'
 import { SemesterRegistrationControllers } from './semesterRegistration.controller'
 import { SemesterRegistrationValidations } from './semesterRegistration.validation'
 
@@ -7,6 +9,7 @@ const router = express.Router()
 
 router.post(
   '/',
+  auth(USER_ROLE.admin),
   validateRequest(
     SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
   ),
@@ -15,11 +18,13 @@ router.post(
 
 router.get(
   '/:id',
+  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
   SemesterRegistrationControllers.getSingleSemesterRegistration,
 )
 
 router.patch(
   '/:id',
+  auth(USER_ROLE.admin),
   validateRequest(
     SemesterRegistrationValidations.updateSemesterRegistrationValidationSchema,
   ),
@@ -28,6 +33,10 @@ router.patch(
 
 // router.delete('/:id', SemesterRegistrationControllers.deleteSemesterRegistration)
 
-router.get('/', SemesterRegistrationControllers.getAllSemesterRegistrations)
+router.get(
+  '/',
+  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  SemesterRegistrationControllers.getAllSemesterRegistrations,
+)
 
 export const SemesterRegistrationRoutes = router

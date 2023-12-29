@@ -1,3 +1,5 @@
+import httpStatus from 'http-status'
+import AppError from '../../errors/AppError'
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface'
 import { User } from './user.model'
 
@@ -110,4 +112,22 @@ export const generateAdminId = async () => {
 
   incrementId = `A-${incrementId}`
   return incrementId
+}
+
+export async function checkUserStatus(userId: string) {
+  const user = await User.isUserExistsByCustomId(userId)
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!')
+  }
+
+  if (user.isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!')
+  }
+
+  if (user.status === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!')
+  }
+
+  return user
 }

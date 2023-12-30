@@ -23,11 +23,15 @@ const createStudentService = async (password: string, payload: TStudent) => {
 
   userData.password = password || (config.default_password as string)
   userData.role = 'student'
+  userData.email = payload.email
 
   // Academix semester info
   const admissionSemester = await AcademicSemester.findById(
     payload.admissionSemester,
   )
+  if (!admissionSemester) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Admission semester not found!')
+  }
 
   const session = await mongoose.startSession()
 
@@ -76,12 +80,12 @@ const createFacultyService = async (password: string, payload: TFaculty) => {
 
   //set student role
   userData.role = 'faculty'
+  userData.email = payload.email
 
   // find academic department info
   const academicDepartment = await AcademicDepartment.findById(
     payload.academicDepartment,
   )
-
   if (!academicDepartment) {
     throw new AppError(400, 'Academic department not found')
   }
@@ -133,6 +137,7 @@ const createAdminService = async (password: string, payload: TFaculty) => {
 
   //set student role
   userData.role = 'admin'
+  userData.email = payload.email
 
   const session = await mongoose.startSession()
 

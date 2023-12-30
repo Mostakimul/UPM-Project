@@ -9,13 +9,13 @@ const router = express.Router()
 
 router.get(
   '/:id',
-  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  auth(USER_ROLE.admin, USER_ROLE.faculty),
   StudentController.getSingleStudent,
 )
 
 router.patch(
   '/:id',
-  auth(USER_ROLE.admin, USER_ROLE.student),
+  auth(USER_ROLE.admin),
   validateRequest(StudentValidations.UpdateStudentValidationSchema),
   StudentController.updateStudent,
 )

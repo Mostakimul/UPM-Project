@@ -162,18 +162,16 @@ const updateEnrolledCourseMarksService = async (
   }
 
   const isOfferedCourseExists = await OfferedCourse.findById(offeredCourse)
-
   if (!isOfferedCourseExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Offered course not found !')
   }
-  const isStudentExists = await Student.findById(student)
 
+  const isStudentExists = await Student.findById(student)
   if (!isStudentExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student not found !')
   }
 
   const faculty = await Faculty.findOne({ id: facultyId }, { _id: 1 })
-
   if (!faculty) {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found !')
   }
@@ -186,7 +184,7 @@ const updateEnrolledCourseMarksService = async (
   })
 
   if (!isCourseBelongToFaculty) {
-    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden! !')
+    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!')
   }
 
   const modifiedData: Record<string, unknown> = {

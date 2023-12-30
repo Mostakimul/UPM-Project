@@ -9,7 +9,11 @@ import { UserServices } from './user.service'
 const createStudent = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body
 
-  const result = await UserServices.createStudentService(password, studentData)
+  const result = await UserServices.createStudentService(
+    req.file,
+    password,
+    studentData,
+  )
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -22,7 +26,11 @@ const createStudent = catchAsync(async (req, res, next) => {
 const createFaculty = catchAsync(async (req, res) => {
   const { password, faculty: facultyData } = req.body
 
-  const result = await UserServices.createFacultyService(password, facultyData)
+  const result = await UserServices.createFacultyService(
+    req.file,
+    password,
+    facultyData,
+  )
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -35,7 +43,11 @@ const createFaculty = catchAsync(async (req, res) => {
 const createAdmin = catchAsync(async (req, res) => {
   const { password, admin: adminData } = req.body
 
-  const result = await UserServices.createAdminService(password, adminData)
+  const result = await UserServices.createAdminService(
+    req.file,
+    password,
+    adminData,
+  )
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

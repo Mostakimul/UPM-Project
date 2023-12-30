@@ -1,7 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status'
 import mongoose from 'mongoose'
 import config from '../../config'
 import AppError from '../../errors/AppError'
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model'
 import { AcademicSemester } from '../academicSemester/academicSemester.model'
 import { Admin } from '../admin/admin.model'
@@ -17,7 +21,11 @@ import {
   generateStudentID,
 } from './user.utils'
 
-const createStudentService = async (password: string, payload: TStudent) => {
+const createStudentService = async (
+  file: any,
+  password: string,
+  payload: TStudent,
+) => {
   // set student role
   const userData: Partial<TUser> = {}
 
@@ -39,8 +47,11 @@ const createStudentService = async (password: string, payload: TStudent) => {
     session.startTransaction()
 
     userData.id = await generateStudentID(admissionSemester)
+    // Send Image to cloudinary
+    const imageName = `${userData.id}${payload.name.firstName}`
+    const imagePath = file?.path
+    const { secure_url } = await sendImageToCloudinary(imageName, imagePath)
 
-    // T-1
     const newUser = await User.create([userData], { session })
 
     // create a student
@@ -49,8 +60,7 @@ const createStudentService = async (password: string, payload: TStudent) => {
     }
     payload.id = newUser[0].id
     payload.user = newUser[0]._id
-
-    // T-2
+    payload.profileImg = secure_url
     const newStudent = await Student.create([payload], { session })
 
     if (!newStudent) {
@@ -71,7 +81,11 @@ const createStudentService = async (password: string, payload: TStudent) => {
   }
 }
 
-const createFacultyService = async (password: string, payload: TFaculty) => {
+const createFacultyService = async (
+  file: any,
+  password: string,
+  payload: TFaculty,
+) => {
   // create a user object
   const userData: Partial<TUser> = {}
 
@@ -96,6 +110,11 @@ const createFacultyService = async (password: string, payload: TFaculty) => {
     session.startTransaction()
     //set  generated id
     userData.id = await generateFacultyId()
+
+    const imageName = `${userData.id}${payload?.name?.firstName}`
+    const path = file?.path
+    //send image to cloudinary
+    const { secure_url } = await sendImageToCloudinary(imageName, path)
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }) // array
@@ -128,7 +147,11 @@ const createFacultyService = async (password: string, payload: TFaculty) => {
   }
 }
 
-const createAdminService = async (password: string, payload: TFaculty) => {
+const createAdminService = async (
+  file: any,
+  password: string,
+  payload: TFaculty,
+) => {
   // create a user object
   const userData: Partial<TUser> = {}
 
@@ -145,6 +168,11 @@ const createAdminService = async (password: string, payload: TFaculty) => {
     session.startTransaction()
     //set  generated id
     userData.id = await generateAdminId()
+
+    const imageName = `${userData.id}${payload?.name?.firstName}`
+    const path = file?.path
+    //send image to cloudinary
+    const { secure_url } = await sendImageToCloudinary(imageName, path)
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session })

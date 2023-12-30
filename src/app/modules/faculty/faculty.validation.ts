@@ -28,7 +28,7 @@ export const createFacultyValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       academicDepartment: z.string(),
-      profileImg: z.string().optional(),
+      // profileImg: z.string().optional(),
     }),
   }),
 })
@@ -41,6 +41,7 @@ const updateUserNameValidationSchema = z.object({
 
 export const updateFacultyValidationSchema = z.object({
   body: z.object({
+    password: z.string().optional(),
     faculty: z.object({
       designation: z.string().optional(),
       name: updateUserNameValidationSchema,

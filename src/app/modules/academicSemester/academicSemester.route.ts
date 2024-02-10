@@ -20,7 +20,17 @@ router.patch(
   validateRequest(AcademicSemesterValidations.updateAcademicSemesterValidation),
   AcademicSemesterController.updateAcademicSemester,
 )
-router.get('/:semesterId', AcademicSemesterController.getSingleStudent)
-router.get('/', AcademicSemesterController.getAllAcademicSemesters)
+
+router.get(
+  '/:semesterId',
+  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  AcademicSemesterController.getSingleStudent,
+)
+
+router.get(
+  '/',
+  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  AcademicSemesterController.getAllAcademicSemesters,
+)
 
 export const AcademicSemesterRoutes = router

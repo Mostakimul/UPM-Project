@@ -33,7 +33,7 @@ const createStudentService = async (
   userData.role = 'student'
   userData.email = payload.email
 
-  // Academix semester info
+  // Academic semester info
   const admissionSemester = await AcademicSemester.findById(
     payload.admissionSemester,
   )
@@ -41,16 +41,30 @@ const createStudentService = async (
     throw new AppError(httpStatus.NOT_FOUND, 'Admission semester not found!')
   }
 
+  // find department
+  const academicDepartment = await AcademicDepartment.findById(
+    payload.academicDepartment,
+  )
+  if (!academicDepartment) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found!')
+  }
+
+  payload.academicFaculty = academicDepartment.academicFaculty
+
   const session = await mongoose.startSession()
 
   try {
     session.startTransaction()
 
     userData.id = await generateStudentID(admissionSemester)
+
     // Send Image to cloudinary
-    const imageName = `${userData.id}${payload.name.firstName}`
-    const imagePath = file?.path
-    const { secure_url } = await sendImageToCloudinary(imageName, imagePath)
+    if (file) {
+      const imageName = `${userData.id}${payload.name.firstName}`
+      const imagePath = file?.path
+      const { secure_url } = await sendImageToCloudinary(imageName, imagePath)
+      payload.profileImg = secure_url as string
+    }
 
     const newUser = await User.create([userData], { session })
 
@@ -60,7 +74,7 @@ const createStudentService = async (
     }
     payload.id = newUser[0].id
     payload.user = newUser[0]._id
-    payload.profileImg = secure_url
+
     const newStudent = await Student.create([payload], { session })
 
     if (!newStudent) {
@@ -111,11 +125,12 @@ const createFacultyService = async (
     //set  generated id
     userData.id = await generateFacultyId()
 
-    const imageName = `${userData.id}${payload?.name?.firstName}`
-    const path = file?.path
-    //send image to cloudinary
-    const { secure_url } = await sendImageToCloudinary(imageName, path)
-
+    if (file) {
+      const imageName = `${userData.id}${payload.name.firstName}`
+      const imagePath = file?.path
+      const { secure_url } = await sendImageToCloudinary(imageName, imagePath)
+      payload.profileImg = secure_url as string
+    }
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }) // array
 
@@ -169,10 +184,12 @@ const createAdminService = async (
     //set  generated id
     userData.id = await generateAdminId()
 
-    const imageName = `${userData.id}${payload?.name?.firstName}`
-    const path = file?.path
-    //send image to cloudinary
-    const { secure_url } = await sendImageToCloudinary(imageName, path)
+    if (file) {
+      const imageName = `${userData.id}${payload.name.firstName}`
+      const imagePath = file?.path
+      const { secure_url } = await sendImageToCloudinary(imageName, imagePath)
+      payload.profileImg = secure_url as string
+    }
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session })

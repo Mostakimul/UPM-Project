@@ -8,8 +8,8 @@ import { AcademicSemesterValidations } from './academicSemester.validation'
 const router = express.Router()
 
 router.post(
-  '/create-academic-semster',
-  auth(USER_ROLE.admin),
+  '/',
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   validateRequest(AcademicSemesterValidations.academicSemesterValidation),
   AcademicSemesterController.createAcademicSemester,
 )
@@ -29,7 +29,12 @@ router.get(
 
 router.get(
   '/',
-  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  auth(
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+    USER_ROLE.superAdmin,
+  ),
   AcademicSemesterController.getAllAcademicSemesters,
 )
 

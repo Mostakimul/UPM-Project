@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { BloodGroup } from '../faculty/faculty.constant'
 
 const UserNameValidationSchema = z.object({
   firstName: z.string().min(1).max(255).trim(),
@@ -32,9 +33,7 @@ const StudentValidationSchema = z.object({
       email: z.string().email(),
       contactNo: z.string().min(1).max(20).trim(),
       emergencyContactNo: z.string().min(1).max(20).trim(),
-      bloodGroup: z
-        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-        .optional(),
+      bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]),
       presentAddress: z.string().min(1).max(255).trim(),
       permanentAddress: z.string().min(1).max(255).trim(),
       guardian: GuardianValidationSchema,
@@ -84,7 +83,7 @@ const UpdateStudentValidationSchema = z.object({
       permanentAddress: z.string().min(1).max(255).trim().optional(),
       guardian: UpdateGuardianValidationSchema.optional(),
       localGuardian: UpdateLocalGuardianValidationSchema.optional(),
-      // profileImg: z.string().optional(),
+      profileImg: z.string().optional(),
       admissionSemester: z.string().optional(),
       academicDepartment: z.string().optional(),
     }),

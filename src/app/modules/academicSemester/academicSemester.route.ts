@@ -16,14 +16,19 @@ router.post(
 
 router.patch(
   '/:semesterId',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   validateRequest(AcademicSemesterValidations.updateAcademicSemesterValidation),
   AcademicSemesterController.updateAcademicSemester,
 )
 
 router.get(
   '/:semesterId',
-  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+  auth(
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+    USER_ROLE.superAdmin,
+  ),
   AcademicSemesterController.getSingleStudent,
 )
 

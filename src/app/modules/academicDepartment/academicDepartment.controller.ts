@@ -6,7 +6,7 @@ import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 import { AcademicDepartmentServices } from './academicDepartment.service'
 
-const createAcademicDepartment = catchAsync(async (req, res, next) => {
+const createAcademicDepartment = catchAsync(async (req, res) => {
   const result =
     await AcademicDepartmentServices.createacAdemicDepartmentService(req.body)
 
@@ -18,19 +18,20 @@ const createAcademicDepartment = catchAsync(async (req, res, next) => {
   })
 })
 
-const getAllAcademicDepartments = catchAsync(async (req, res, next) => {
+const getAllAcademicDepartments = catchAsync(async (req, res) => {
   const result =
-    await AcademicDepartmentServices.getAllAcademicDepartmentsService()
+    await AcademicDepartmentServices.getAllAcademicDepartmentsService(req.query)
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'All academic departments retrived successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   })
 })
 
-const getSingleAcademicDepartment = catchAsync(async (req, res, next) => {
+const getSingleAcademicDepartment = catchAsync(async (req, res) => {
   const { academicDepartmentId } = req.params
   const result =
     await AcademicDepartmentServices.getSingleAcademicDepartmentService(

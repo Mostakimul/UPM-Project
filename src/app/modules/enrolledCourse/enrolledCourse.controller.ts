@@ -33,7 +33,25 @@ const updateEnrolledCourseMarks = catchAsync(async (req, res) => {
   })
 })
 
+const getMyEnrolledCourses = catchAsync(async (req, res) => {
+  const userId = req.user.userId
+
+  const result = await EnrolledCourseServices.getMyEnrolledCoursesService(
+    userId,
+    req.query,
+  )
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Enrolled courses retrieved successfully!',
+    meta: result.meta,
+    data: result.result,
+  })
+})
+
 export const EnrolledCourseControllers = {
   createEnrolledCourse,
   updateEnrolledCourseMarks,
+  getMyEnrolledCourses,
 }

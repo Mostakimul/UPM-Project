@@ -15,9 +15,15 @@ router.post(
   EnrolledCourseControllers.createEnrolledCourse,
 )
 
+router.get(
+  '/my-enrolled-course',
+  auth(USER_ROLE.student),
+  EnrolledCourseControllers.getMyEnrolledCourses,
+)
+
 router.patch(
   '/update-enrolled-course-marks',
-  auth(USER_ROLE.faculty),
+  auth(USER_ROLE.faculty, USER_ROLE.admin, USER_ROLE.superAdmin),
   validateRequest(
     EnrolledCourseValidations.updateEnrolledCourseMarksValidationZodSchema,
   ),

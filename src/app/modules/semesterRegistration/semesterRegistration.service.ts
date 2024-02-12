@@ -63,8 +63,8 @@ const getAllSemesterRegistrationsService = async (
     .fields()
 
   const result = await semesterRegistrationQuery.modelQuery
-
-  return result
+  const meta = await semesterRegistrationQuery.countTotal()
+  return { meta, result }
 }
 
 const getSingleSemesterRegistrationService = async (id: string) => {

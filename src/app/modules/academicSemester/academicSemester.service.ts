@@ -1,4 +1,5 @@
 import httpStatus from 'http-status'
+import QueryBuilder from '../../builder/QueryBuilder'
 import AppError from '../../errors/AppError'
 import { academicSemesterCodeMapper } from './academicSemester.constant'
 import { TAcademicSemester } from './academicSemester.interface'
@@ -14,10 +15,18 @@ const createAcademicSemesterService = async (payload: TAcademicSemester) => {
   return result
 }
 
-const getAllAcademicSemestersService = async () => {
-  const result = await AcademicSemester.find()
+const getAllAcademicSemestersService = async (
+  query: Record<string, unknown>,
+) => {
+  const academicSemesterQuery = new QueryBuilder(AcademicSemester.find(), query)
+    .filter()
+    .sort()
+    .paginate()
+    .fields()
 
-  return result
+  const result = await academicSemesterQuery.modelQuery
+  const meta = await academicSemesterQuery.countTotal()
+  return { meta, result }
 }
 
 const getSingleAcademicSemesterService = async (id: string) => {

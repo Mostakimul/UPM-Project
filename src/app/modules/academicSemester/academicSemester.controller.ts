@@ -6,7 +6,7 @@ import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 import { AcademicSemesterServices } from './academicSemester.service'
 
-const createAcademicSemester = catchAsync(async (req, res, next) => {
+const createAcademicSemester = catchAsync(async (req, res) => {
   const result = await AcademicSemesterServices.createAcademicSemesterService(
     req.body,
   )
@@ -19,18 +19,21 @@ const createAcademicSemester = catchAsync(async (req, res, next) => {
   })
 })
 
-const getAllAcademicSemesters = catchAsync(async (req, res, next) => {
-  const result = await AcademicSemesterServices.getAllAcademicSemestersService()
+const getAllAcademicSemesters = catchAsync(async (req, res) => {
+  const result = await AcademicSemesterServices.getAllAcademicSemestersService(
+    req.query,
+  )
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'All academic semester retrived successfully',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   })
 })
 
-const getSingleStudent = catchAsync(async (req, res, next) => {
+const getSingleStudent = catchAsync(async (req, res) => {
   const { semesterId } = req.params
   const result =
     await AcademicSemesterServices.getSingleAcademicSemesterService(semesterId)
@@ -43,7 +46,7 @@ const getSingleStudent = catchAsync(async (req, res, next) => {
   })
 })
 
-const updateAcademicSemester = catchAsync(async (req, res, next) => {
+const updateAcademicSemester = catchAsync(async (req, res) => {
   const { semesterId } = req.params
   const updatedData = req.body
 
